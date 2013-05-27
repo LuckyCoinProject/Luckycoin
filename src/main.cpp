@@ -845,7 +845,8 @@ int64 static GetBlockValue(int nHeight, int64 nFees, uint256 prevHash)
 
     if(nHeight < 50000)   
     {
-		const char* cseed = prevHash.ToString().substr(8,7).c_str();
+        std::string cseed_str = prevHash.ToString().substr(8,7);
+		const char* cseed = cseed_str.c_str();
 		long seed = hex2long(cseed);
 
 		int rand = generateMTRandom(seed, 100000);
@@ -862,7 +863,8 @@ int64 static GetBlockValue(int nHeight, int64 nFees, uint256 prevHash)
         // Subsidy is cut in half every 1,036,800 blocks, which will occur approximately every 2 years
         nSubsidy >>= (nHeight / 1036800); // Luckycoin: 1036.8K blocks in ~2 years
 
-		const char* cseed = prevHash.ToString().substr(8,7).c_str();
+        std::string cseed_str = prevHash.ToString().substr(8,7);
+		const char* cseed = cseed_str.c_str();
 		long seed = hex2long(cseed);
 
 		int rand = generateMTRandom(seed, 100000);
