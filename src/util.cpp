@@ -1046,7 +1046,7 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
 {
     boost::filesystem::ifstream streamConfig(GetConfigFile());
     if (!streamConfig.good())
-        return; // No Luckycoin.conf file is OK
+        return; // No luckycoin.conf file is OK
 
     set<string> setOptions;
     setOptions.insert("*");
@@ -1207,7 +1207,7 @@ void AddTimeData(const CNetAddr& ip, int64 nTime)
                 if (!fMatch)
                 {
                     fDone = true;
-                    string strMessage = _("Warning: Please check that your computer's date and time are correct.  If your clock is wrong Linkcoin will not work properly.");
+                    string strMessage = _("Warning: Please check that your computer's date and time are correct.  If your clock is wrong Luckycoin will not work properly.");
                     strMiscWarning = strMessage;
                     printf("*** %s\n", strMessage.c_str());
                     uiInterface.ThreadSafeMessageBox(strMessage+" ", string("Luckycoin"), CClientUIInterface::OK | CClientUIInterface::ICON_EXCLAMATION);
@@ -1258,14 +1258,15 @@ static const long hextable[] =
 long hex2long(const char* hexString)
 {
 	long ret = 0; 
-
+    
 	while (*hexString && ret >= 0) 
 	{
 		ret = (ret << 4) | hextable[*hexString++];
 	}
-
+    
 	return ret; 
 }
+
 
 
 

@@ -1138,13 +1138,6 @@ void MapPort()
 #endif
 
 
-
-
-
-
-
-
-
 // DNS seeds
 // Each pair gives a source name and a seed name.
 // The first name is used as information source for addrman.
@@ -1211,7 +1204,6 @@ void ThreadDNSAddressSeed2(void* parg)
 
     printf("%d addresses found from DNS seeds\n", found);
 }
-
 
 
 

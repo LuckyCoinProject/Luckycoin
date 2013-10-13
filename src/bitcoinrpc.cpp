@@ -1099,7 +1099,7 @@ Value addmultisigaddress(const Array& params, bool fHelp)
     {
         const std::string& ks = keys[i].get_str();
 
-        // Case 1:Testecoin address and we have full public key:
+        // Case 1:Luckycoin address and we have full public key:
         CBitcoinAddress address(ks);
         if (address.IsValid())
         {
@@ -1860,8 +1860,6 @@ Value validateaddress(const Array& params, bool fHelp)
 
 Value getworkex(const Array& params, bool fHelp)
 {
-	printf(">>> In getworkex ....\n");
-
     if (fHelp || params.size() > 2)
         throw runtime_error(
             "getworkex [data, coinbase]\n"
