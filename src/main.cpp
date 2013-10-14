@@ -32,7 +32,6 @@ CTxMemPool mempool;
 unsigned int nTransactionsUpdated = 0;
 
 map<uint256, CBlockIndex*> mapBlockIndex;
-
 uint256 hashGenesisBlock("0x9b7bce58999062b63bfb18586813c42491fa32f4591d8d3043cb4fa9e551541b");
 static CBigNum bnProofOfWorkLimit(~uint256(0) >> 20); // Luckycoin: starting difficulty is 1 / 2^12
 CBlockIndex* pindexGenesisBlock = NULL;
@@ -830,14 +829,12 @@ uint256 static GetOrphanRoot(const CBlock* pblock)
     return pblock->GetHash();
 }
 
-
 int static generateMTRandom(unsigned int s, int range)
 {
 	random::mt19937 gen(s);
     random::uniform_int_distribution<> dist(1, range);
     return dist(gen);
 }
-
 
 int64 static GetBlockValue(int nHeight, int64 nFees, uint256 prevHash)
 {
@@ -848,9 +845,9 @@ int64 static GetBlockValue(int nHeight, int64 nFees, uint256 prevHash)
         std::string cseed_str = prevHash.ToString().substr(8,7);
 		const char* cseed = cseed_str.c_str();
 		long seed = hex2long(cseed);
-
+        
 		int rand = generateMTRandom(seed, 100000);
-
+        
 		if(rand > 30000 && rand < 35001)		
 			nSubsidy = 188 * COIN;
 		else if(rand > 70000 && rand < 71001)	
@@ -862,13 +859,13 @@ int64 static GetBlockValue(int nHeight, int64 nFees, uint256 prevHash)
     {
         // Subsidy is cut in half every 1,036,800 blocks, which will occur approximately every 2 years
         nSubsidy >>= (nHeight / 1036800); // Luckycoin: 1036.8K blocks in ~2 years
-
+        
         std::string cseed_str = prevHash.ToString().substr(8,7);
 		const char* cseed = cseed_str.c_str();
 		long seed = hex2long(cseed);
-
+        
 		int rand = generateMTRandom(seed, 100000);
-
+        
 		if(rand > 30000 && rand < 35001)		
 			nSubsidy *= 2;
 		else if(rand > 70000 && rand < 71001)	
@@ -876,15 +873,12 @@ int64 static GetBlockValue(int nHeight, int64 nFees, uint256 prevHash)
 		else if(rand > 50000 && rand < 50011)	
 			nSubsidy *= 58;
     }
-
+    
     return nSubsidy + nFees;
 }
 
-
-
-static const int64 nTargetTimespan = 4 * 60 * 60; // Luckycoin: every 4 hours
-static const int64 nTargetSpacing = 60; // Luckycoin: 1 minutes
-static const int64 nInterval = nTargetTimespan / nTargetSpacing;
+static const int64 nTargetTimespan = 20 * 60; // Luckycoin: every 20 minutes
+static const int64 nTargetSpacing = 60; // Luckycoin: 60 seconds
 
 //
 // minimum amount of work that could possibly be required nTime after
@@ -901,10 +895,10 @@ unsigned int ComputeMinWork(unsigned int nBase, int64 nTime)
     bnResult.SetCompact(nBase);
     while (nTime > 0 && bnResult < bnProofOfWorkLimit)
     {
-        // Maximum 400% adjustment...
-        bnResult *= 4;
-        // ... in best-case exactly 4-times-normal target time
-        nTime -= nTargetTimespan*4;
+        // Maximum 125% adjustment...
+        bnResult += (bnResult/4);
+        // ... in best-case exactly 1.25-times-normal target time
+        nTime -= (nTargetTimespan + nTargetTimespan/4);
     }
     if (bnResult > bnProofOfWorkLimit)
         bnResult = bnProofOfWorkLimit;
@@ -914,6 +908,12 @@ unsigned int ComputeMinWork(unsigned int nBase, int64 nTime)
 unsigned int static GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlock *pblock)
 {
     unsigned int nProofOfWorkLimit = bnProofOfWorkLimit.GetCompact();
+
+    // Luckycoin difficulty adjustment protocol switch
+    bool fNewDifficultyProtocol = (pindexLast->nHeight+1 >= 69360 || fTestNet);
+
+    int64 nTargetTimespanCurrent = fNewDifficultyProtocol ? nTargetTimespan : (nTargetTimespan*12);
+    int64 nInterval = nTargetTimespanCurrent / nTargetSpacing;
 
     // Genesis block
     if (pindexLast == NULL)
@@ -956,44 +956,47 @@ unsigned int static GetNextWorkRequired(const CBlockIndex* pindexLast, const CBl
 
     // Limit adjustment step
     int64 nActualTimespan = pindexLast->GetBlockTime() - pindexFirst->GetBlockTime();
-    printf("  nActualTimespan = %"PRI64d"  before bounds\n", nActualTimespan);
+    printf(" nActualTimespan = %"PRI64d" before bounds\n", nActualTimespan);
 
-	if(pindexLast->nHeight+1 > 10000)	
+    int64 nActualTimespanMin = fNewDifficultyProtocol ? (nTargetTimespanCurrent - nTargetTimespanCurrent/4) : (nTargetTimespanCurrent/4);
+    int64 nActualTimespanMax = fNewDifficultyProtocol ? (nTargetTimespanCurrent + nTargetTimespanCurrent/4) : (nTargetTimespanCurrent*4);
+	
+	if(pindexLast->nHeight+1 > 10000)
 	{
-		if (nActualTimespan < nTargetTimespan/4)
-			nActualTimespan = nTargetTimespan/4;
-		if (nActualTimespan > nTargetTimespan*4)
-			nActualTimespan = nTargetTimespan*4;
+        if (nActualTimespan < nActualTimespanMin)
+            nActualTimespan = nActualTimespanMin;
+        if (nActualTimespan > nActualTimespanMax)
+            nActualTimespan = nActualTimespanMax;
 	}
 	else if(pindexLast->nHeight+1 > 5000)
 	{
-		if (nActualTimespan < nTargetTimespan/8)
-			nActualTimespan = nTargetTimespan/8;
-		if (nActualTimespan > nTargetTimespan*4)
-			nActualTimespan = nTargetTimespan*4;
+        if (nActualTimespan < nActualTimespanMin/2)
+            nActualTimespan = nActualTimespanMin/2;
+        if (nActualTimespan > nActualTimespanMax)
+            nActualTimespan = nActualTimespanMax;
 	}
-	else 
+	else
 	{
-		if (nActualTimespan < nTargetTimespan/16)
-			nActualTimespan = nTargetTimespan/16;
-		if (nActualTimespan > nTargetTimespan*4)
-			nActualTimespan = nTargetTimespan*4;
+        if (nActualTimespan < nActualTimespanMin/4)
+            nActualTimespan = nActualTimespanMin/4;
+        if (nActualTimespan > nActualTimespanMax)
+            nActualTimespan = nActualTimespanMax;
 	}
 
     // Retarget
     CBigNum bnNew;
     bnNew.SetCompact(pindexLast->nBits);
     bnNew *= nActualTimespan;
-    bnNew /= nTargetTimespan;
+    bnNew /= nTargetTimespanCurrent;
 
     if (bnNew > bnProofOfWorkLimit)
         bnNew = bnProofOfWorkLimit;
 
     /// debug print
     printf("GetNextWorkRequired RETARGET\n");
-    printf("nTargetTimespan = %"PRI64d"    nActualTimespan = %"PRI64d"\n", nTargetTimespan, nActualTimespan);
-    printf("Before: %08x  %s\n", pindexLast->nBits, CBigNum().SetCompact(pindexLast->nBits).getuint256().ToString().c_str());
-    printf("After:  %08x  %s\n", bnNew.GetCompact(), bnNew.getuint256().ToString().c_str());
+    printf("nTargetTimespan = %"PRI64d" nActualTimespan = %"PRI64d"\n", nTargetTimespanCurrent, nActualTimespan);
+    printf("Before: %08x %s\n", pindexLast->nBits, CBigNum().SetCompact(pindexLast->nBits).getuint256().ToString().c_str());
+    printf("After: %08x %s\n", bnNew.GetCompact(), bnNew.getuint256().ToString().c_str());
 
     return bnNew.GetCompact();
 }
@@ -2094,9 +2097,10 @@ bool LoadBlockIndex(bool fAllowNew)
         }
 
         //// debug print
-        printf("block.GetHash() = %s\n", block.GetHash().ToString().c_str());
-        printf("hashGenesisBlock = %s\n", hashGenesisBlock.ToString().c_str());
-        printf("block.hashMerkleRoot = %s\n", block.hashMerkleRoot.ToString().c_str());
+        printf("%s\n", block.GetHash().ToString().c_str());
+        printf("%s\n", hashGenesisBlock.ToString().c_str());
+        printf("%s\n", block.hashMerkleRoot.ToString().c_str());
+        
         assert(block.hashMerkleRoot == uint256("0x6f80efd038566e1e3eab3e1d38131604d06481e77f2462235c6a9a94b1f8abf9"));
 
         // If genesis block hash does not match, then generate new genesis hash.
@@ -2131,8 +2135,6 @@ bool LoadBlockIndex(bool fAllowNew)
         }
 
         block.print();
-        printf("hashGenesisBlock = %s\n", hashGenesisBlock.ToString().c_str());
-        printf("block.GetHash() = %s\n", block.GetHash().ToString().c_str());
         assert(block.GetHash() == hashGenesisBlock);
 
         // Start new block file
