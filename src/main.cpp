@@ -3061,6 +3061,10 @@ bool ProcessMessages(CNode* pfrom)
 
     loop
     {
+        // Don't process messages from disconnected nodes
+        if (pfrom->fDisconnect)
+            return true;
+
         // Don't bother if send buffer is too full to respond anyway
         if (pfrom->vSend.size() >= SendBufferSize())
             break;
