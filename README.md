@@ -1,7 +1,10 @@
+Luckycoin Client v0.8.8
+=======================
+
 Luckycoin - a fork of Litecoin version with random bonus blocks. Like Litecoin it uses scrypt as a proof of work scheme.
 
    - 1 min block target
-   - Difficulty retargets every 4 hrs with accelerated diff adjustment in the beginning
+   - Difficulty retargets every 20 min with accelerated diff adjustment in the beginning
    - Initially 88 coins per block, halves every 2 years (1,036,800 blocks)
    - Total around 200 millions coins
    - connection port is 9917, RPC-port 9918
