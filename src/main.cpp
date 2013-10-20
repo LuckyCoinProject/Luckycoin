@@ -2504,8 +2504,8 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv)
             SeenLocal(addrMe);
         }
 
-        // Disconnect if not /Satoshi:0.6.3/ or /LKY:
-        if (pfrom->strSubVer.find("/Satoshi:0.6.3/") == string::npos && pfrom->strSubVer.find("/LKY:") == string::npos)
+        // Disconnect if not /LKY:
+        if (pfrom->strSubVer.find("/LKY:") == string::npos)
         {
             printf("partner %s using wrong subver %s; disconnecting\n", pfrom->addr.ToString().c_str(), pfrom->strSubVer.c_str());
             pfrom->fDisconnect = true;
