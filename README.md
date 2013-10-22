@@ -20,7 +20,13 @@ Luckycoin - a fork of Litecoin version with random bonus blocks. Like Litecoin i
     - 1% chances 5 times the normal coins
     - 0.01% chance 58 times the normal coins
 
-	
+
+Official Luckycoin Community Forum
+==================================
+
+Please visit the official Luckycoin community forum for more information.
+https://cryptocointalk.com/forum/188-luckycoin-lky/
+
 
 Development process
 ===================
