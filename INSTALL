@@ -2,7 +2,7 @@ Building Luckycoin
 
 See doc/readme-qt.rst for instructions on building Luckycoin-QT,
 the intended-for-end-users, nice-graphical-interface, reference
-implementation of Junkcoin.
+implementation of Luckycoin.
 
 See doc/build-*.txt for instructions on building luckycoind,
 the intended-for-services, no-graphical-interface, reference
