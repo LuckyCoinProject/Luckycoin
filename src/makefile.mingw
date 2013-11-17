@@ -7,13 +7,12 @@ USE_UPNP:=0
 INCLUDEPATHS= \
  -I"C:\boost_1_53_0" \
  -I"C:\db-4.8.30.NC\build_unix" \
- -I"C:\openssl-1.0.1e\include" 
-
+ -I"C:\openssl-1.0.1e\include"
 
 LIBPATHS= \
  -L"C:\boost_1_53_0\stage\lib" \
  -L"C:\db-4.8.30.NC\build_unix" \
- -L"C:\openssl-1.0.1e" 
+ -L"C:\openssl-1.0.1e"
 
 LIBS= \
  -l boost_system-mgw45-mt-d-1_53 \
@@ -65,8 +64,8 @@ OBJS= \
     obj/util.o \
     obj/wallet.o \
     obj/walletdb.o \
-    obj/noui.o
-
+    obj/noui.o \
+    obj/checkpointsync.o
 
 all: luckycoind.exe
 

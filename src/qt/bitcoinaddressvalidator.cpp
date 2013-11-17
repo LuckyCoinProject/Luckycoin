@@ -59,7 +59,7 @@ QValidator::State BitcoinAddressValidator::validate(QString &input, int &pos) co
            (ch >= 'A' && ch<='Z')) &&
            ch != 'l' && ch != 'I' && ch != '0' && ch != 'O')
         {
-            // Luckynumeric and not a 'forbidden' character
+            // Alphanumeric and not a 'forbidden' character
         }
         else
         {

@@ -33,7 +33,7 @@ static const unsigned int MAX_BLOCK_SIGOPS = MAX_BLOCK_SIZE/50;
 static const unsigned int MAX_ORPHAN_TRANSACTIONS = MAX_BLOCK_SIZE/100;
 static const int64 MIN_TX_FEE = 10000000;
 static const int64 MIN_RELAY_TX_FEE = MIN_TX_FEE;
-static const int64 MAX_MONEY = 205000000 * COIN; // Luckycoin: maximum of 205M coins (given some randomness)
+static const int64 MAX_MONEY = 20000000 * COIN; // Luckycoin: maximum of 205M coins (given some randomness)
 inline bool MoneyRange(int64 nValue) { return (nValue >= 0 && nValue <= MAX_MONEY); }
 static const int COINBASE_MATURITY = 70;
 // Threshold for nLockTime: below this value it is interpreted as block number, otherwise as UNIX timestamp.
@@ -70,6 +70,7 @@ extern int64 nHPSTimerStart;
 extern int64 nTimeBestReceived;
 extern CCriticalSection cs_setpwalletRegistered;
 extern std::set<CWallet*> setpwalletRegistered;
+extern std::map<uint256, CBlock*> mapOrphanBlocks;
 extern unsigned char pchMessageStart[4];
 
 // Settings
@@ -995,8 +996,7 @@ public:
         }
 
         // Check the header
-        if (!CheckProofOfWork(GetPoWHash(), nBits))
-            return error("CBlock::ReadFromDisk() : errors in block header");
+        // if (!CheckProofOfWork(GetPoWHash(), nBits)) return error("CBlock::ReadFromDisk() : errors in block header");
 
         return true;
     }
@@ -1406,6 +1406,10 @@ public:
  * not read the entire buffer if the alert is for a newer version, but older
  * versions can still relay the original data.
  */
+
+static const char* pszMainKey = "04a0343a06aed2aeb3724da2c564345c6ed7e5b8d67edca54eba8f072fdbdf35ae352350d4c016dc86475a01af6df082a48bda8f943ee94a06967db08a4125b297";
+static const char* pszTestKey = "04fe4fe492aff3155c9a4d2a76d07d5edd80ecd35db409c3639f935fbe1110ca182bfd97e8749bff7633073558ad8c23ce7af54649a255c9e3d9748cae0f8163d7";
+
 class CUnsignedAlert
 {
 public:
@@ -1583,19 +1587,19 @@ public:
         return false;
     }
 
-    bool CheckSignature()
-    {
-        CKey key;
-        if (!key.SetPubKey(ParseHex("04a0343a06aed2aeb3724da2c564345c6ed7e5b8d67edca54eba8f072fdbdf35ae352350d4c016dc86475a01af6df082a48bda8f943ee94a06967db08a4125b297")))
-            return error("CAlert::CheckSignature() : SetPubKey failed");
-        if (!key.Verify(Hash(vchMsg.begin(), vchMsg.end()), vchSig))
-            return error("CAlert::CheckSignature() : verify signature failed");
+    bool CheckSignature() const
+	{
+		CKey key;
+		if (!key.SetPubKey(ParseHex(fTestNet ? pszTestKey : pszMainKey)))
+			return error("CAlert::CheckSignature() : SetPubKey failed");
+		if (!key.Verify(Hash(vchMsg.begin(), vchMsg.end()), vchSig))
+			return error("CAlert::CheckSignature() : verify signature failed");
 
-        // Now unserialize the data
-        CDataStream sMsg(vchMsg, SER_NETWORK, PROTOCOL_VERSION);
-        sMsg >> *(CUnsignedAlert*)this;
-        return true;
-    }
+		// Now unserialize the data
+		CDataStream sMsg(vchMsg, SER_NETWORK, PROTOCOL_VERSION);
+		sMsg >> *(CUnsignedAlert*)this;
+		return true;
+	}
 
     bool ProcessAlert();
 
