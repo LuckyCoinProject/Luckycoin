@@ -1807,7 +1807,7 @@ bool CBlock::CheckBlock() const
         return DoS(50, error("CheckBlock() : proof of work failed"));
 
     // Check timestamp
-    if (GetBlockTime() > GetAdjustedTime() + 2 * 60 * 60)
+    if (GetBlockTime() > GetAdjustedTime() + 20 * 60)
         return error("CheckBlock() : block timestamp too far in the future");
 
     // First transaction must be coinbase, the rest must not be
@@ -1866,7 +1866,8 @@ bool CBlock::AcceptBlock()
         return DoS(100, error("AcceptBlock() : incorrect proof of work"));
 
     // Check timestamp against prev
-    if (GetBlockTime() <= pindexPrev->GetMedianTimePast())
+    int64 nTimeGap = nHeight >= 95360 ? 90 : 0;
+    if (GetBlockTime() <= nTimeGap + pindexPrev->GetMedianTimePast())
         return error("AcceptBlock() : block's timestamp is too early");
 
     // Check that all transactions are finalized
@@ -2553,7 +2554,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv)
         }
 
         // Disconnect if not /LKY:
-        if (pfrom->strSubVer.find("/LKY:") == string::npos)
+        if (pfrom->strSubVer.empty() || pfrom->strSubVer.find("/LKY:") == string::npos)
         {
             printf("partner %s using wrong subver %s; disconnecting\n", pfrom->addr.ToString().c_str(), pfrom->strSubVer.c_str());
             pfrom->fDisconnect = true;
