@@ -1,4 +1,4 @@
-Luckycoin 0.9.9 BETA
+Luckycoin 1.0.0
 
 Copyright (c) 2009-2012 Bitcoin Developers
 Copyright (c) 2011-2012 Litecoin Developers
