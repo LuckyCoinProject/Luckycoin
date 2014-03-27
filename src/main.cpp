@@ -1060,7 +1060,7 @@ void static InvalidChainFound(CBlockIndex* pindexNew)
 
 void CBlock::UpdateTime(const CBlockIndex* pindexPrev)
 {
-    nTime = max(pindexPrev->GetMedianTimePast()+1, GetAdjustedTime());
+    nTime = max(pindexPrev->GetMedianTimePast()+91, GetAdjustedTime());
 
     // Updating time can change work required on testnet:
     if (fTestNet)
@@ -2101,7 +2101,7 @@ bool LoadBlockIndex(bool fAllowNew)
 		//   vMerkleTree: 6f80efd038 
 
         // Genesis block
-        const char* pszTimestamp = "May 22, 2013, 12:16 a.m. EDT: Japan’s Nikkei Stock Average JP:NIK +1.77%, which ended at their highest level in more than five years in each of the last three trading sessions, climbed a further 1.2% Wednesday";
+        const char* pszTimestamp = "May 22, 2013, 12:16 a.m. EDT: Japanï¿½s Nikkei Stock Average JP:NIK +1.77%, which ended at their highest level in more than five years in each of the last three trading sessions, climbed a further 1.2% Wednesday";
         CTransaction txNew;
         txNew.vin.resize(1);
         txNew.vout.resize(1);
