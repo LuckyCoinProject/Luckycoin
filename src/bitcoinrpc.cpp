@@ -1911,7 +1911,7 @@ Value getworkex(const Array& params, bool fHelp)
         }
 
         // Update nTime
-        pblock->nTime = max(pindexPrev->GetMedianTimePast()+1, GetAdjustedTime());
+        pblock->nTime = max(pindexPrev->GetMedianTimePast()+91, GetAdjustedTime());
         pblock->nNonce = 0;
 
         // Update nExtraNonce
@@ -2229,7 +2229,7 @@ Value getblocktemplate(const Array& params, bool fHelp)
         result.push_back(Pair("coinbaseaux", aux));
         result.push_back(Pair("coinbasevalue", (int64_t)pblock->vtx[0].vout[0].nValue));
         result.push_back(Pair("target", hashTarget.GetHex()));
-        result.push_back(Pair("mintime", (int64_t)pindexPrev->GetMedianTimePast()+1));
+        result.push_back(Pair("mintime", (int64_t)pindexPrev->GetMedianTimePast()+91));
         result.push_back(Pair("mutable", aMutable));
         result.push_back(Pair("noncerange", "00000000ffffffff"));
         result.push_back(Pair("sigoplimit", (int64_t)MAX_BLOCK_SIGOPS));
