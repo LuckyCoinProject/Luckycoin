@@ -1,4 +1,4 @@
-Luckycoin Client v1.0.0
+Luckycoin Client v1.0.1
 =======================
 
 Luckycoin - a fork of Litecoin version with random bonus blocks. Like Litecoin it uses scrypt as a proof of work scheme.
@@ -21,10 +21,11 @@ Luckycoin - a fork of Litecoin version with random bonus blocks. Like Litecoin i
     - 0.01% chance 58 times the normal coins
 
 
-Official Luckycoin Community Forum
+Official Luckycoin Website and Community Forum
 ==================================
 
-Please visit the official Luckycoin community forum for more information.
+Please visit the official Luckycoin website and community forum for more information.
+http://luckycoin.cc
 https://cryptocointalk.com/forum/188-luckycoin-lky/
 
 
