@@ -45,13 +45,13 @@ static const int64 CENT = 1000000;
 #define ARRAYLEN(array)     (sizeof(array)/sizeof((array)[0]))
 #define printf              OutputDebugStringF
 
-#ifndef PRI64d
+#ifndef  PRI64d 
 #if defined(_MSC_VER) || defined(__MSVCRT__)
-#define PRI64d  "I64d"
+#define  PRI64d   "I64d"
 #define PRI64u  "I64u"
 #define PRI64x  "I64x"
 #else
-#define PRI64d  "lld"
+#define  PRI64d   "lld"
 #define PRI64u  "llu"
 #define PRI64x  "llx"
 #endif
@@ -191,7 +191,7 @@ void runCommand(std::string strCommand);
 
 inline std::string i64tostr(int64 n)
 {
-    return strprintf("%" PRI64d, n);
+    return strprintf("%" PRI64d , n);
 }
 
 inline std::string itostr(int n)
