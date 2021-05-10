@@ -844,7 +844,7 @@ int64 static GetBlockValue(int nHeight, int64 nFees, uint256 prevHash)
     if(nHeight < 50000)   
     {
         std::string cseed_str = prevHash.ToString().substr(8,7);
-		const unsigned char* cseed = cseed_str.c_str();
+		const char* cseed = cseed_str.c_str();
 		long seed = hex2long(cseed);
         
 		int rand = generateMTRandom(seed, 100000);
@@ -862,7 +862,7 @@ int64 static GetBlockValue(int nHeight, int64 nFees, uint256 prevHash)
         nSubsidy >>= (nHeight / 100000); // Luckycoin: 100K blocks in ~2 months
         
         std::string cseed_str = prevHash.ToString().substr(8,7);
-		const unsigned char* cseed = cseed_str.c_str();
+		const char* cseed = cseed_str.c_str();
 		long seed = hex2long(cseed);
         
 		int rand = generateMTRandom(seed, 100000);

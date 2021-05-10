@@ -1255,13 +1255,13 @@ static const long hextable[] =
 };
 
 
-long hex2long(const unsigned char* hexString)
+long hex2long(const char* hexString)
 {
 	long ret = 0; 
     
 	while (*hexString && ret >= 0) 
 	{
-		ret = (ret << 4) | hextable[*hexString++];
+		ret = (ret << 4) | hextable[(uint8_t)*hexString++];
 	}
     
 	return ret; 
