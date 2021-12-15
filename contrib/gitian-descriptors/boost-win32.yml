@@ -17,9 +17,10 @@ script: |
   mkdir -p $TMPDIR/bin/$GBUILD_BITS $TMPDIR/include
   tar xjf boost_1_49_0.tar.bz2
   cd boost_1_49_0
-  echo "--- tmp_dir_helpers.orig.hpp	2012-06-10 01:39:25.403268210 +0200
-+++ tmp_dir_helpers.hpp	2012-06-10 01:41:14.653823479 +0200
-@@ -19,9 +19,9 @@
+  echo "
+  --- tmp_dir_helpers.orig.hpp	2012-06-10 01:39:25.403268210 +0200
+  +++ tmp_dir_helpers.hpp	2012-06-10 01:41:14.653823479 +0200
+  @@ -19,9 +19,9 @@
  #include <string>
  
  #if defined(BOOST_INTERPROCESS_WINDOWS)
