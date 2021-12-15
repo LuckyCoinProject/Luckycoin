@@ -20,10 +20,10 @@ script: |-
     +++ tmp_dir_helpers.hpp	2012-06-10 01:41:14.653823479 +0200
     @@ -19,9 +19,9 @@
     patch boost/interprocess/detail/tmp_dir_helpers.hpp useboottime.patch
-    echo "using gcc : 4.4 : i586-mingw32msvc-g++
+    echo "using gcc : 4.4 : i686-w64-mingw32-g++
         :
-        <rc>i586-mingw32msvc-windres
-        <archiver>i586-mingw32msvc-ar
+        <rc>i686-w64-mingw32msvc-windres
+        <archiver>i686-w64-mingw32msvc-ar
         <cxxflags>-frandom-seed=boost1
     ;" > user-config.jam
     ./bootstrap.sh --without-icu
