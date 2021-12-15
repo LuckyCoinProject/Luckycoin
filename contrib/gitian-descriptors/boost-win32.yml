@@ -40,4 +40,4 @@ script: |-
     zip -r boost-win32-1.49.0-gitian2.zip *
     cp boost-win32-1.49.0-gitian2.zip $OUTDIR
 suites: 
-  - lucid
+  - precise
