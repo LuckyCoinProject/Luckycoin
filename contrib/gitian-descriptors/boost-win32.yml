@@ -6,7 +6,6 @@ files:
 name: boost
 packages: 
   - mingw32
-  - mingw32-g++
   - faketime
   - zip
 reference_datetime: "2011-01-30 00:00:00"
