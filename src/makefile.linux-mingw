@@ -7,21 +7,20 @@ DEPSDIR:=/usr/i686-w64-mingw32
 USE_UPNP:=0
 
 INCLUDEPATHS= \
- -I"$(DEPSDIR)/boost_1_53_0" \
- -I"$(DEPSDIR)/db-4.8.30.NC/build_unix" \
- -I"$(DEPSDIR)/openssl-1.0.1g/include" \
+ -I"$(CURDIR)" \
  -I"$(CURDIR)"/obj \
+ -I"$(DEPSDIR)/include" \
+ -I"$(DEPSDIR)"
 
 LIBPATHS= \
- -L"$(DEPSDIR)/boost_1_53_0/stage/lib" \
- -L"$(DEPSDIR)/db-4.8.30.NC/build_unix" \
- -L"$(DEPSDIR)/openssl-1.0.1g"
+ -L"$(DEPSDIR)/lib"
 
 LIBS= \
  -l boost_system-mt-s \
  -l boost_filesystem-mt-s \
  -l boost_program_options-mt-s \
  -l boost_thread_win32-mt-s \
+ -l boost_chrono-mt-s \
  -l db_cxx \
  -l ssl \
  -l crypto
