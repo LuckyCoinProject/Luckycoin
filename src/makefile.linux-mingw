@@ -33,6 +33,9 @@ DEFS=-D_MT -DWIN32 -D_WINDOWS -DBOOST_THREAD_USE_LIB -DBOOST_SPIRIT_THREADSAFE
 DEBUGFLAGS=-g
 xCXXFLAGS=-O2 -w -Wall -Wextra -Wformat -Wformat-security -Wno-unused-parameter $(DEBUGFLAGS) $(DEFS) $(INCLUDEPATHS) $(CXXFLAGS)
 # enable: ASLR, DEP and large address aware
+
+CFLAGS=-O2 -w -Wall -Wextra -Wformat -Wformat-security -Wno-unused-parameter $(DEBUGFLAGS) $(DEFS) $(INCLUDEPATHS)
+
 xLDFLAGS=-Wl,--dynamicbase -Wl,--nxcompat -Wl,--large-address-aware -static-libgcc -static-libstdc++ $(LDFLAGS)
 
 TESTDEFS = -DTEST_DATA_DIR=$(abspath test/data)
@@ -83,14 +86,12 @@ OBJS= \
     obj/checkpointsync.o
 
 obj/scrypt.o: scrypt.c
+    $(CC) -c $(CFLAGS) -o $@ $^
+
+obj/scrypt.o: scrypt.c
     $(CC) -c $(xCXXFLAGS) -o $@ $^
 
 all: luckycoind.exe
-
-DEFS += -I"$(CURDIR)/leveldb/include"
-DEFS += -I"$(CURDIR)/leveldb/helpers"
-leveldb/libleveldb.a:
-    @echo "Building LevelDB ..." && cd leveldb && TARGET_OS=OS_WINDOWS_CROSSCOMPILE $(MAKE) CC=$(CC) CXX=$(CXX) OPT="$(xCXXFLAGS)" libleveldb.a libmemenv.a && i686-w64-mingw32-ranlib libleveldb.a && i686-w64-mingw32-ranlib libmemenv.a && cd ..
 
 obj/build.h: FORCE
     /bin/sh ../share/genbuild.sh obj/build.h
@@ -121,6 +122,5 @@ clean:
     -rm -f obj-test/*.o
     -rm -f test_luckycoin.exe
     -rm -f obj/build.h
-    cd leveldb && TARGET_OS=OS_WINDOWS_CROSSCOMPILE $(MAKE) clean && cd ..
 
 FORCE:
