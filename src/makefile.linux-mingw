@@ -34,8 +34,6 @@ DEBUGFLAGS=-g
 xCXXFLAGS=-O2 -w -Wall -Wextra -Wformat -Wformat-security -Wno-unused-parameter $(DEBUGFLAGS) $(DEFS) $(INCLUDEPATHS) $(CXXFLAGS)
 # enable: ASLR, DEP and large address aware
 
-CFLAGS=-O2 -w -Wall -Wextra -Wformat -Wformat-security -Wno-unused-parameter $(DEBUGFLAGS) $(DEFS) $(INCLUDEPATHS)
-
 xLDFLAGS=-Wl,--dynamicbase -Wl,--nxcompat -Wl,--large-address-aware -static-libgcc -static-libstdc++ $(LDFLAGS)
 
 TESTDEFS = -DTEST_DATA_DIR=$(abspath test/data)
@@ -86,9 +84,6 @@ OBJS= \
     obj/checkpointsync.o
 
 obj/scrypt.o: scrypt.c
-    $(CC) -c $(CFLAGS) -o $@ $^
-
-obj/scrypt.o: scrypt.c
     $(CC) -c $(xCXXFLAGS) -o $@ $^
 
 all: luckycoind.exe
@@ -97,9 +92,6 @@ obj/build.h: FORCE
     /bin/sh ../share/genbuild.sh obj/build.h
 version.cpp: obj/build.h
 DEFS += -DHAVE_BUILD_INFO
-
-obj/%-sse2.o: %-sse2.cpp
-    $(CXX) -c $(xCXXFLAGS) -msse2 -mstackrealign -o $@ $<
 
 obj/%.o: %.cpp $(HEADERS)
     $(CXX) -c $(xCXXFLAGS) -o $@ $<
