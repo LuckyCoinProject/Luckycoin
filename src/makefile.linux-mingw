@@ -33,7 +33,6 @@ DEFS=-D_MT -DWIN32 -D_WINDOWS -DBOOST_THREAD_USE_LIB -DBOOST_SPIRIT_THREADSAFE
 DEBUGFLAGS=-g
 xCXXFLAGS=-O2 -w -Wall -Wextra -Wformat -Wformat-security -Wno-unused-parameter $(DEBUGFLAGS) $(DEFS) $(INCLUDEPATHS) $(CXXFLAGS)
 # enable: ASLR, DEP and large address aware
-
 xLDFLAGS=-Wl,--dynamicbase -Wl,--nxcompat -Wl,--large-address-aware -static-libgcc -static-libstdc++ $(LDFLAGS)
 
 TESTDEFS = -DTEST_DATA_DIR=$(abspath test/data)
@@ -105,7 +104,7 @@ obj-test/%.o: test/%.cpp $(HEADERS)
     $(CXX) -c $(TESTDEFS) $(xCXXFLAGS) -o $@ $<
 
 test_luckycoin.exe: $(TESTOBJS) $(filter-out obj/init.o,$(OBJS:obj/%=obj/%))
-    $(CXX) $(xCXXFLAGS) $(xLDFLAGS) -o $@ $(LIBPATHS) $^ -lboost_unit_test_framework-mt-s $(LIBS)
+    $(CXX) $(xCXXFLAGS) $(xLDFLAGS) -o $@ $(LIBPATHS) $^ -lboost_unit_test_framework$(LIBS)
 
 
 clean:
