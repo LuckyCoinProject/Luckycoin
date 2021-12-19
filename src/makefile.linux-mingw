@@ -83,10 +83,10 @@ OBJS= \
     obj/noui.o \
     obj/checkpointsync.o
 
+all: luckycoind.exe
+
 obj/scrypt.o: scrypt.c
     $(CC) -c $(xCXXFLAGS) -o $@ $^
-
-all: luckycoind.exe
 
 obj/build.h: FORCE
     /bin/sh ../share/genbuild.sh obj/build.h
