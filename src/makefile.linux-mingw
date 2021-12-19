@@ -20,7 +20,6 @@ LIBPATHS= \
  -L"$(DEPSDIR)/lib"
 
 LIBS= \
-  $(CURDIR)/leveldb/libleveldb.a $(CURDIR)/leveldb/libmemenv.a \
  -l boost_system-mt-s \
  -l boost_filesystem-mt-s \
  -l boost_program_options-mt-s \
@@ -57,8 +56,6 @@ LIBS += -l mingwthrd -l kernel32 -l user32 -l gdi32 -l comdlg32 -l winspool -l w
 HEADERS = $(wildcard *.h)
 
 OBJS= \
-    leveldb/libleveldb.a \
-    obj/alert.o \
     obj/version.o \
     obj/checkpoints.o \
     obj/netbase.o \
@@ -67,6 +64,7 @@ OBJS= \
     obj/key.o \
     obj/db.o \
     obj/init.o \
+    obj/irc.o \
     obj/keystore.o \
     obj/main.o \
     obj/net.o \
@@ -74,9 +72,6 @@ OBJS= \
     obj/bitcoinrpc.o \
     obj/rpcdump.o \
     obj/rpcnet.o \
-    obj/rpcmining.o \
-    obj/rpcwallet.o \
-    obj/rpcblockchain.o \
     obj/rpcrawtransaction.o \
     obj/script.o \
     obj/scrypt.o \
@@ -85,10 +80,7 @@ OBJS= \
     obj/wallet.o \
     obj/walletdb.o \
     obj/noui.o \
-    obj/hash.o \
-    obj/bloom.o \
-    obj/leveldb.o \
-    obj/txdb.o
+    obj/checkpointsync.o
 
 ifdef USE_SSE2
 DEFS += -DUSE_SSE2
@@ -97,11 +89,6 @@ OBJS += $(OBJS_SSE2)
 endif
 
 all: luckycoind.exe
-
-DEFS += -I"$(CURDIR)/leveldb/include"
-DEFS += -I"$(CURDIR)/leveldb/helpers"
-leveldb/libleveldb.a:
-	@echo "Building LevelDB ..." && cd leveldb && TARGET_OS=OS_WINDOWS_CROSSCOMPILE $(MAKE) CC=$(CC) CXX=$(CXX) OPT="$(xCXXFLAGS)" libleveldb.a libmemenv.a && i686-w64-mingw32-ranlib libleveldb.a && i686-w64-mingw32-ranlib libmemenv.a && cd ..
 
 obj/build.h: FORCE
 	/bin/sh ../share/genbuild.sh obj/build.h
