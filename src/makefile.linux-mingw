@@ -82,16 +82,10 @@ OBJS= \
     obj/noui.o \
     obj/checkpointsync.o
 
-ifdef USE_SSE2
-DEFS += -DUSE_SSE2
-OBJS_SSE2= obj/scrypt-sse2.o
-OBJS += $(OBJS_SSE2)
-endif
-
 all: luckycoind.exe
 
 obj/scrypt.o: scrypt.c
-	$(CC) -c $(xCXXFLAGS) -o $@ $^
+	$(CC) -c $(xCXXFLAGS) $(xLDFLAGS) -o $@ $^
 
 obj/build.h: FORCE
 	/bin/sh ../share/genbuild.sh obj/build.h
